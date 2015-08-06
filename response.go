@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
-	"time"
 )
 
 // Wrties a jsonapi response with one, with related records sideloaded, into "included" array.
@@ -206,19 +205,7 @@ func visitModelNode(model interface{}, sideload bool) (*Node, []*Node, error) {
 					node.Attributes = make(map[string]interface{})
 				}
 
-				if fieldValue.Type() == reflect.TypeOf(time.Time{}) {
-					isZeroMethod := fieldValue.MethodByName("IsZero")
-					isZero := isZeroMethod.Call(make([]reflect.Value, 0))[0].Interface().(bool)
-					if isZero {
-						return false
-					}
-
-					unix := fieldValue.MethodByName("Unix")
-					val := unix.Call(make([]reflect.Value, 0))[0]
-					node.Attributes[args[1]] = val.Int()
-				} else {
-					node.Attributes[args[1]] = fieldValue.Interface()
-				}
+				node.Attributes[args[1]] = fieldValue.Interface()
 			} else if annotation == "relation" {
 				isSlice := fieldValue.Type().Kind() == reflect.Slice
 
