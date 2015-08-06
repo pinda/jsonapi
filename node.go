@@ -1,18 +1,18 @@
 package jsonapi
 
 type OnePayload struct {
-	Data     *Node             `json:"data"`
-	Included []*Node           `json:"included,omitempty"`
 	Links    map[string]string `json:"links,omitempty"`
 	Meta     map[string]string `json:"meta,omitempty"`
+	Data     *Node             `json:"data"`
+	Included []*Node           `json:"included,omitempty"`
 	JsonApi  map[string]string `json:"jsonapi,omitempty"`
 }
 
 type ManyPayload struct {
-	Data     []*Node           `json:"data"`
-	Included []*Node           `json:"included,omitempty"`
 	Links    map[string]string `json:"links,omitempty"`
 	Meta     map[string]string `json:"meta,omitempty"`
+	Data     []*Node           `json:"data"`
+	Included []*Node           `json:"included,omitempty"`
 }
 
 type Node struct {
