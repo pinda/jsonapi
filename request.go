@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+var (
+	InvalidTimestamp = errors.New("The timestamp is not compliant with the default layout")
+)
+
 // Convert an io into a struct instance using jsonapi tags on struct fields.
 // Method supports single request payloads only, at the moment. Bulk creates and updates
 // are not supported yet.
@@ -144,6 +148,16 @@ func unmarshalNode(data *Node, model reflect.Value, included *map[string]*Node) 
 						at = int64(v.Interface().(float64))
 					} else if v.Kind() == reflect.Int {
 						at = v.Int()
+					} else if v.Kind() == reflect.String {
+						layout := "2006-01-02T15:04:05.000000000Z"
+						ti, err := time.Parse(layout, v.String())
+						if err != nil {
+							er = InvalidTimestamp
+							return false
+						}
+
+						fieldValue.Set(reflect.ValueOf(ti))
+						return false
 					} else {
 						er = errors.New("Only numbers can be parsed as dates, unix timestamps")
 						return false
